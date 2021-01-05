@@ -11,7 +11,30 @@ app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 var database, collection;
 
-app.post("/personnel", (request, response) => {
+//client
+
+//GET client list
+app.get("/client", (request, response) => {
+    collection.find({}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
+    });
+});
+
+//GET client by id
+app.get("/client/:id", (request, response) => {
+    collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
+    });
+});
+
+//POST client
+app.post("/client", (request, response) => {
     collection.insert(request.body, (error, result) => {
         if(error) {
             return response.status(500).send(error);
@@ -20,13 +43,13 @@ app.post("/personnel", (request, response) => {
     });
 });
 
-app.get("/personnel", (request, response) => {
-    collection.find({}).toArray((error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        response.send(result);
-    });
+//DELETE client by id
+app.delete("/client/:id", (request, response) => {
+    var id = request.params.id;
+    request.db.remove({_id: id}, function(error, document){
+        if (error) response.send(error);
+        return response.send("deleted");
+    })
 });
 
 app.get("/personnel/:id", (request, response) => {

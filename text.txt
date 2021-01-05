@@ -3,3 +3,7 @@ target 5:00, what I can make.
 
 dbUser
 dbUserPassword
+//----------------
+1.Create collections
+clients, projects
+target 8:00 PM
