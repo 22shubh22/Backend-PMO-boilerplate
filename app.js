@@ -9,13 +9,13 @@ const DATABASE_NAME = "database_name_pmo";
 var app = Express();
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
-var database, collection;
+var database, client_collection;
 
 //client
 
 //GET client list
 app.get("/client", (request, response) => {
-    collection.find({}).toArray((error, result) => {
+    client_collection.find({}).toArray((error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -25,7 +25,7 @@ app.get("/client", (request, response) => {
 
 //GET client by id
 app.get("/client/:id", (request, response) => {
-    collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
+    client_collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -35,7 +35,7 @@ app.get("/client/:id", (request, response) => {
 
 //POST client
 app.post("/client", (request, response) => {
-    collection.insert(request.body, (error, result) => {
+    client_collection.insert(request.body, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -46,7 +46,7 @@ app.post("/client", (request, response) => {
 //DELETE client by id
 app.delete("/client/:id", (request, response) => {
     var id = request.params.id;
-    const c = collection.remove({_id:  new ObjectId(request.params.id)});
+    const c = client_collection.remove({_id:  new ObjectId(request.params.id)});
 
     // TODO: Remove Promise all
     Promise.all([c]).then(result => {
@@ -64,7 +64,7 @@ app.delete("/client/:id", (request, response) => {
 });
 
 app.get("/personnel/:id", (request, response) => {
-    collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
+    client_collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -78,7 +78,7 @@ app.listen(5000, () => {
             throw error;
         }
         database = client.db(DATABASE_NAME);
-        collection = database.collection("client");
+        client_collection = database.collection("client");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
 });
