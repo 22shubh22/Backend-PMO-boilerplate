@@ -46,10 +46,21 @@ app.post("/client", (request, response) => {
 //DELETE client by id
 app.delete("/client/:id", (request, response) => {
     var id = request.params.id;
-    request.db.remove({_id: id}, function(error, document){
-        if (error) response.send(error);
-        return response.send("deleted");
-    })
+    const c = collection.remove({_id:  new ObjectId(request.params.id)});
+
+    // TODO: Remove Promise all
+    Promise.all([c]).then(result => {
+        console.log(result);
+        response.status(200).json({
+            message: 'deleted',
+        });
+    }).catch(err => {
+        console.error(err);
+        response.status(500).json({
+            error: err
+        });
+    });
+    
 });
 
 app.get("/personnel/:id", (request, response) => {
@@ -67,7 +78,7 @@ app.listen(5000, () => {
             throw error;
         }
         database = client.db(DATABASE_NAME);
-        collection = database.collection("personnel");
+        collection = database.collection("client");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
 });
