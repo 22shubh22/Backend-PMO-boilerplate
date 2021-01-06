@@ -11,6 +11,8 @@ app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 var database, client_collection;
 
+const Joi = require('@hapi/joi');
+
 //client
 
 //GET client list
@@ -35,12 +37,28 @@ app.get("/client/:id", (request, response) => {
 
 //POST client
 app.post("/client", (request, response) => {
-    client_collection.insert(request.body, (error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        response.send(result.result);
+    //TODO: shift client schmea in it's place.
+    const clientSchema = Joi.object().keys({
+        name: Joi.string().required(),
     });
+    //TODO: rename
+    const r = Joi.validate(request.body, clientSchema);
+    const { value, error } = r;
+    const valid = error == null;
+    if(!valid) {
+        response.status(422).json({
+            message: 'Invalid request',
+            data: request.body
+        })
+    } else {
+        client_collection.insert( value, (error, result) => {
+            if(error) {
+                return response.status(500).send(error);
+            }
+            response.send(result.result);
+        });
+    }
+    
 });
 
 //DELETE client by id
@@ -61,15 +79,6 @@ app.delete("/client/:id", (request, response) => {
         });
     });
     
-});
-
-app.get("/personnel/:id", (request, response) => {
-    client_collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        response.send(result);
-    });
 });
 
 app.listen(5000, () => {

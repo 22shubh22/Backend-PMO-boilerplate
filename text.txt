@@ -4,6 +4,7 @@ target 5:00, what I can make.
 dbUser
 dbUserPassword
 //----------------
-1.Create collections
+1.Create models with schemas
 clients, projects
-target 8:00 PM
+
+Validate request,body schemas while post,put
