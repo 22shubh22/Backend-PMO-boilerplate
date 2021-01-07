@@ -12,7 +12,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 var database, client_collection;
 
 const Joi = require('@hapi/joi');
-const { update } = require("./Models/client");
+const Schema = require('./schema.js')
 
 //client
 
@@ -38,13 +38,7 @@ app.get("/client/:id", (request, response) => {
 
 //POST client
 app.post("/client", (request, response) => {
-    //TODO: shift client schmea in it's place.
-    const clientSchema = Joi.object().keys({
-        name: Joi.string().required(),
-    });
-    //TODO: rename
-    const r = Joi.validate(request.body, clientSchema);
-    const { value, error } = r;
+    const { value, error } = Schema.validateClient(request.body);
     const valid = error == null;
     if(!valid) {
         response.status(422).json({
@@ -56,7 +50,7 @@ app.post("/client", (request, response) => {
             if(error) {
                 return response.status(500).send(error);
             }
-            response.send(result.result);
+            response.send(result);
         });
     }
     
@@ -64,13 +58,7 @@ app.post("/client", (request, response) => {
 
 //PUT client
 app.put("/client/:id", (request, response) => {
-    //TODO: shift client schmea in it's place.
-    const clientSchema = Joi.object().keys({
-        name: Joi.string().required(),
-    });
-    //TODO: rename, Make it work
-    const r = Joi.validate(request.body, clientSchema);
-    const { value, error } = r;
+    const { value, error } = Schema.validateClient(request.body);
     const valid = error == null;
     if(!valid) {
         response.status(422).json({
