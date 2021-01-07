@@ -9,7 +9,7 @@ const DATABASE_NAME = "database_name_pmo";
 var app = Express();
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
-var database, client_collection;
+var database, client_collection, project_collection;
 
 const Joi = require('@hapi/joi');
 const Schema = require('./schema.js')
@@ -106,6 +106,38 @@ app.delete("/client/:id", (request, response) => {
     
 });
 
+//PROJECT
+
+//GET project list
+app.get("/projects", (request, response) => {
+    project_collection.find({}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
+    });
+});
+
+//POST a new project
+app.post("/projects", (request, response) => {
+    const { value, error } = Schema.validateClient(request.body);
+    const valid = error == null;
+    if(!valid) {
+        response.status(422).json({
+            message: 'Invalid request',
+            data: request.body
+        })
+    } else {
+        client_collection.insert( value, (error, result) => {
+            if(error) {
+                return response.status(500).send(error);
+            }
+            response.send(result);
+        });
+    }
+    
+});
+
 app.listen(5000, () => {
     MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
         if(error) {
@@ -113,6 +145,7 @@ app.listen(5000, () => {
         }
         database = client.db(DATABASE_NAME);
         client_collection = database.collection("client");
+        project_collection = database.collection("project");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
 });
