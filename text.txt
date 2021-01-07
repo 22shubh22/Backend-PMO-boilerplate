@@ -7,4 +7,6 @@ dbUserPassword
 1.Create models with schemas
 clients, projects
 
-Validate request,body schemas while post,put
+Validate request,body schemas while post,
+
+* Client name can be editable a client put.

@@ -12,6 +12,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 var database, client_collection;
 
 const Joi = require('@hapi/joi');
+const { update } = require("./Models/client");
 
 //client
 
@@ -59,6 +60,42 @@ app.post("/client", (request, response) => {
         });
     }
     
+});
+
+//PUT client
+app.put("/client/:id", (request, response) => {
+    //TODO: shift client schmea in it's place.
+    const clientSchema = Joi.object().keys({
+        name: Joi.string().required(),
+    });
+    //TODO: rename, Make it work
+    const r = Joi.validate(request.body, clientSchema);
+    const { value, error } = r;
+    const valid = error == null;
+    if(!valid) {
+        response.status(422).json({
+            message: 'Client schema dont match',
+            data: request.body
+        });
+    } else {
+        client_collection.findOneAndUpdate(
+            { "_id": new ObjectId(request.params.id) },
+            {
+                $set: {
+                    name: request.body.name,
+                }
+            },
+            {
+                // Will create a new document if document do not exist
+                upsert: true
+            }
+        ).then(result => {
+            response.status(200).json({
+                message: 'PUT successful',
+            });
+        })
+        .catch(error => response.status(500).send(error))
+    }
 });
 
 //DELETE client by id
