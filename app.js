@@ -120,7 +120,7 @@ app.get("/projects", (request, response) => {
 
 //POST a new project
 app.post("/projects", (request, response) => {
-    const { value, error } = Schema.validateClient(request.body);
+    const { value, error } = Schema.validateProject(request.body);
     const valid = error == null;
     if(!valid) {
         response.status(422).json({
@@ -128,14 +128,32 @@ app.post("/projects", (request, response) => {
             data: request.body
         })
     } else {
-        client_collection.insert( value, (error, result) => {
+        project_collection.insert( value, (error, result) => {
             if(error) {
                 return response.status(500).send(error);
             }
             response.send(result);
         });
     }
-    
+});
+
+//POST a new project
+app.post("/project_test", (request, response) => {
+    const { value, error } = Schema.validateProjectTest(request.body);
+    const valid = error == null;
+    if(!valid) {
+        response.status(422).json({
+            message: 'Invalid request',
+            data: request.body
+        })
+    } else {
+        project_collection.insert( value, (error, result) => {
+            if(error) {
+                return response.status(500).send(error);
+            }
+            response.send(result);
+        });
+    }
 });
 
 app.listen(5000, () => {

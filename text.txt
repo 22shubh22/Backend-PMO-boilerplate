@@ -10,3 +10,46 @@ clients, projects
 Validate request,body schemas while post,
 
 * Client name can be editable a client put.
+
+Target tomorrow
+- Correct joi schemas, and make APIS for project.
+
+if middle-ware necessary - this shows guide to create middleware (for joi validation and schema)
+
+{
+	"title": "Project",
+	"client_id": "123",
+	"milestones": [{
+		"project_id": "123",
+		"title": "milestone",
+		"due_date": "date",
+		"tasks": [{
+			"milestone_id": "123",
+			"title": "task",
+			"description": "dscribe",
+			"assinged_to": "assigned_to",
+			"due_date": "date",
+			"completed_on": "date",
+			"comments_allowed": "false",
+			"created_by": "created_by",
+			"notes": [{
+				"task_id": "task_id",
+				"note": "note",
+				"created_by": "created_by"
+			}],
+			"media": [{
+				"title": "media",
+				"path": "media path",
+				"type": "media type",
+				"created_by": "mdia created_by"
+			}]
+		}]
+	}],
+	"components": [{
+		"title": "component title",
+		"project_id": "component project_id"
+	}]
+}
+
+*check milestone stone to post projects
++ Checked that not marked as required fields are not necessary.
