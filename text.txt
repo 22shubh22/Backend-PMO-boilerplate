@@ -51,5 +51,9 @@ if middle-ware necessary - this shows guide to create middleware (for joi valida
 	}]
 }
 
-*check milestone stone to post projects
-+ Checked that not marked as required fields are not necessary.
+* check milestone stone to post projects
+TODO: Checked that not marked as required fields are not necessary.
+
+//-----------------------
+
+
